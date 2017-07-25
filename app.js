@@ -183,7 +183,7 @@ var PageView = {
 			return m('p', 'Loading Stories...');
 		}
 
-		setTitle(vnode.atts.view);
+		setTitle(vnode.attrs.view);
 
 		var pages = Math.floor(view.list.length / settings.storiesPerPage);
 		var itemOnPage = settings.storiesPerPage * (page - 1);
