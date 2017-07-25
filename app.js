@@ -39,6 +39,10 @@ function smoothScrollTop() {
 	}
 }
 
+function setTitle(extra) {
+	document.title = extra ? 'Mithril HN - ' + extra : 'Mithril HN';
+}
+
 //==============================================================================
 //= OnLoad
 //==============================================================================
@@ -179,6 +183,8 @@ var PageView = {
 			return m('p', 'Loading Stories...');
 		}
 
+		setTitle(vnode.atts.view);
+
 		var pages = Math.floor(view.list.length / settings.storiesPerPage);
 		var itemOnPage = settings.storiesPerPage * (page - 1);
 		var subset = view.list.slice(itemOnPage, settings.storiesPerPage * page);
@@ -231,6 +237,8 @@ var item = {
 			if(awaiting[id] === undefined) getItem(id);
 			return 'Loading...';
 		}
+
+		setTitle(item.title);
 
 		var header = renderStory(id);
 		header.tag = 'div';
