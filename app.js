@@ -1,6 +1,6 @@
 
 function extractHostname(url) {
-	if(url === undefined) return "Undefined";
+	if(url === undefined) return undefined;
 	var start = url.indexOf("://");
 	start = start > 0 ? start + 3 : 0;
 	if(url.startsWith('www.', start)) start += 4;
@@ -39,6 +39,9 @@ function smoothScrollTop() {
 	}
 }
 
+//==============================================================================
+//= OnLoad
+//==============================================================================
 window.onload = function() {
 var root = document.body;
 var awaiting = {};
@@ -46,16 +49,6 @@ var items = {};
 var state = {};
 
 m.render(root, "Loading");
-
-function renderLink(story) {
-	if(story.type !== 'story') {
-		return m('a', {href: '#/'+story.type+'/'+story.id}, story.title);
-	}
-	return [
-		m('a', {href: story.url}, story.title), " ",
-		m('span.Item__host', extractHostname(story.url))
-	];
-}
 
 function renderChildrenCount(item) {
 	var count = item.kids ? item.kids.length : 0;
@@ -69,17 +62,22 @@ function renderStory(id) {
 		getItem(id);
 		return m('li.ListItem', '...');
 	}
+	var comments = {href: '#/item/' + item.id};
+	var link = item.url ? {href: '#/item/'+ id} : comments;
+	var hostname = extractHostname(item.url)
+
 	return m('li.ListItem', {
 		style: 'margin-bottom: 16px'
 	}, [
-		m('div.Item__title', renderLink(item)),
+		m('div.Item__title',
+			m('a', link, item.title),
+			hostname ? m('span.Item__host', ' ' + hostname) : null
+		),
 		m('div.Item__meta', [
 			m('span.Item__score', item.score),
-			' points by ', m('span.Item__by', m('a', {href: '#/user/'+item.by}, item.by)),
+			' points by ', m('span.Item__by', m('a', {href: '#/user/' + item.by}, item.by)),
 			' ', m('span.Item__time', relativeTime(item.time)),
-			' | ', m('a', {
-				href: '#/item/' + item.id
-			}, item.descendants + ' comments'),
+			' | ', m('a', comments, item.descendants + ' comments'),
 			' | ', m('span', {title: JSON.stringify(item, null, 2)}, 'JSON'),
 		]),
 	]);
@@ -202,7 +200,6 @@ function renderItem(id) {
 	var collapse = function(e) {
 		item.hidden = !item.hidden;
 	}
-
 
 	return m('div.Item', [
 		// Metadata for the Item
