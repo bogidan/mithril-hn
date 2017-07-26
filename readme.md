@@ -1,7 +1,13 @@
 
-# Mithril HN
+# Mithril HN - ([Demo](https://bogidan.github.io/mithril-hn/))
 
 A news.ycombinator.com viewer app implemented in mithriljs.
+
+## Implemented Features
+
+- Display stories
+- View comments for stories
+- Cache stories locally (no localstorage or serviceworker yet)
 
 ## Goals
 
